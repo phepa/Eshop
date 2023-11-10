@@ -1,18 +1,22 @@
 using Eshop.API.Publishers;
+using Eshop.Database;
 using Eshop.Shared.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<NotificationPublisher>();
+// Add database
+builder.Services.AddDbContext<EshopDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalhostConnectionString")));
 
 // Add Mass transit RabbitMQ
 builder.Services.AddMassTransitMQ(typeof(Program).Assembly);
+
+// Add services
+builder.Services.AddSingleton<NotificationPublisher>();
 
 WebApplication app = builder.Build();
 
@@ -22,10 +26,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseHttpsRedirection();
 app.MapControllers();
+
+// Apply database migrations
+app.MigrateDatabase<EshopDbContext>();
 
 app.Run();

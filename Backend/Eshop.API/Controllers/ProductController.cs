@@ -1,4 +1,5 @@
 using Eshop.API.Publishers;
+using Eshop.Database;
 using Eshop.Shared.Helpers;
 using Eshop.Shared.Models.Messages;
 using Eshop.Shared.Models.Requests.Product;
@@ -12,12 +13,14 @@ namespace Eshop.API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> _logger;
+        private readonly EshopDbContext _context;
         private readonly NotificationPublisher _notificationPublisher;
 
-        public ProductController(ILogger<ProductController> logger, NotificationPublisher notificationPublisher)
+        public ProductController(ILogger<ProductController> logger, NotificationPublisher notificationPublisher, EshopDbContext context)
         {
             _logger = logger;
             _notificationPublisher = notificationPublisher;
+            _context = context;
         }
 
         /// <summary>Schedule new operation under current model version lock.</summary>
