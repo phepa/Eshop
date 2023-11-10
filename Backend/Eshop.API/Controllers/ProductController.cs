@@ -1,4 +1,6 @@
+using Eshop.API.Publishers;
 using Eshop.Shared.Helpers;
+using Eshop.Shared.Models.Messages;
 using Eshop.Shared.Models.Requests.Product;
 using Eshop.Shared.Models.Responses.Product;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ namespace Eshop.API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> _logger;
+        private readonly NotificationPublisher _notificationPublisher;
 
-        public ProductController(ILogger<ProductController> logger)
+        public ProductController(ILogger<ProductController> logger, NotificationPublisher notificationPublisher)
         {
             _logger = logger;
+            _notificationPublisher = notificationPublisher;
         }
 
         /// <summary>Schedule new operation under current model version lock.</summary>
@@ -38,6 +42,12 @@ namespace Eshop.API.Controllers
             {
                 "Product 1", "Product 2", "Product 3"
             };
+
+            await _notificationPublisher.SendNotification(new NotificationMessage()
+            {
+                Source = nameof(GetProducts),
+                Notification = $"Send {products.Count} products",
+            });
 
             return Ok(products);
         }
