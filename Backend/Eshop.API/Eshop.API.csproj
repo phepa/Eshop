@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Eshop.Database\Eshop.Database.csproj" />
+    <ProjectReference Include="..\Eshop.Internal\Eshop.Internal.csproj" />
     <ProjectReference Include="..\Eshop.Shared\Eshop.Shared.csproj" />
   </ItemGroup>
 

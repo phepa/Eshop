@@ -1,5 +1,6 @@
 using Eshop.API.Publishers;
 using Eshop.Database;
+using Eshop.Internal.Services;
 using Eshop.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<EshopDbContext>(options => options.UseSqlServer(bu
 builder.Services.AddMassTransitMQ(typeof(Program).Assembly);
 
 // Add services
+builder.Services.AddScoped<ProductService>();
 builder.Services.AddSingleton<NotificationPublisher>();
 
 WebApplication app = builder.Build();
