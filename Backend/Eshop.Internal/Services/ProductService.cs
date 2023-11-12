@@ -18,15 +18,15 @@ namespace Eshop.Internal.Services
             _context = context;
         }
 
-        public async Task<List<Product>> GetProducts(GetProductsRequest request)
+        public async Task<List<Product>> GetProducts(string? query)
         {
             try
             {
                 IQueryable<Product> result = _context.Products.AsQueryable();
 
-                if (request.NotNull() && request.SearchQuery.NotNullOrEmpty())
+                if (query.NotNullOrEmpty())
                 {
-                    result = result.Where(x => x.Name.Contains(request.SearchQuery));
+                    result = result.Where(x => x.Name.Contains(query));
                 }
 
                 return await result.ToListAsync();

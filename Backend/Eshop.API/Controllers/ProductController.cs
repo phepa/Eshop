@@ -2,7 +2,6 @@ using Eshop.API.Publishers;
 using Eshop.Database;
 using Eshop.Database.Entities;
 using Eshop.Internal.Services;
-using Eshop.Shared.Helpers;
 using Eshop.Shared.Models.Messages;
 using Eshop.Shared.Models.Requests.Product;
 using Eshop.Shared.Models.Responses.Product;
@@ -28,30 +27,14 @@ namespace Eshop.API.Controllers
         }
 
         /// <summary>Get products filtered by query name.</summary>
-        /// <param name="request">See <see cref="GetProductsResponse"/></param>
+        /// <param name="query">Search query</param>
         /// <returns>See <see cref="GetProductsResponse"/>for HTTP 200</returns>
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetProductsResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetProducts(GetProductsRequest request)
+        public async Task<IActionResult> GetProducts(string? query)
         {
-            if (request.IsNull())
-            {
-                return BadRequest(request);
-            }
-
-            if (request.SearchQuery.IsNull())
-            {
-                return BadRequest(nameof(request.SearchQuery));
-            }
-
-            List<Product> result = await _productService.GetProducts(request);
-
-            await _notificationPublisher.SendNotification(new NotificationMessage()
-            {
-                Source = nameof(GetProducts),
-                Notification = $"{nameof(CreateProduct)} - found {result.Count} products",
-            });
+            List<Product> result = await _productService.GetProducts(query);
 
             return Ok(result);
         }
