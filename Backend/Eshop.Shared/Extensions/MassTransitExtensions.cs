@@ -10,12 +10,15 @@ namespace Eshop.Shared.Extensions
         {
             services.AddMassTransit(x =>
             {
+                x.SetKebabCaseEndpointNameFormatter();
                 x.AddConsumers(assembly);
 
-                x.UsingRabbitMq((context, cfg) =>
+                x.UsingRabbitMq((context, rabbit) =>
                 {
-                    cfg.Host("amqp://guest:guest@localhost:5672");
-                    cfg.ConfigureEndpoints(context);
+                    rabbit.Host("amqp://guest:guest@localhost:5672");
+                    rabbit.ConfigureEndpoints(context);
+                    rabbit.UseJsonSerializer();
+                    rabbit.UseMessageRetry(cfg => cfg.Incremental(5, TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10)));
                 });
             });
 

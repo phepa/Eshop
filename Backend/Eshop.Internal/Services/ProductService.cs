@@ -44,7 +44,8 @@ namespace Eshop.Internal.Services
             {
                 Product newProduct = new Product()
                 {
-                    Name = request.Name
+                    Name = request.Name,
+                    CategoryId = request.CategoryId > 0 ? request.CategoryId : null,
                 };
 
                 _context.Products.Add(newProduct);
@@ -69,7 +70,7 @@ namespace Eshop.Internal.Services
                 if (productToUpdate.NotNull())
                 {
                     productToUpdate.Name = request.Name;
-                    productToUpdate.CategoryId = request.CategoryId;
+                    productToUpdate.CategoryId = request.CategoryId > 0 ? request.CategoryId : null;
 
                     await _context.SaveChangesAsync();
 

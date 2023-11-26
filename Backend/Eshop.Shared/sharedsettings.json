@@ -1,0 +1,4 @@
+// Tady jsou konfigurace, které jsou stejné napříč více projekty (RabbitMQ konfigurace, Redis etc.)
+{
+
+}
